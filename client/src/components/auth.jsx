@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../utils/api';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -42,11 +43,10 @@ const Auth = () => {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:3000/login', {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
         },
         body: JSON.stringify(loginData)
       });
@@ -90,7 +90,7 @@ const Auth = () => {
 
     console.log('Signup data:', signupData);
     try {
-      const response = await fetch('http://localhost:3000/signup', {
+      const response = await fetch(`${API_BASE_URL}/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import API_BASE_URL from '../../utils/api';
 import { Bot, X, User, MessageSquare, CornerDownRight, Loader2 } from 'lucide-react';
 import SummaryPopup from './aisumarry';
 
@@ -18,7 +19,7 @@ const PostModal = ({ post, user, onClose, onReplyPosted }) => {
   const handleGetAiSummary = async () => {
     setSummarizing(true);
     try {
-      const response = await fetch('http://localhost:3000/ai-summary', {
+      const response = await fetch(`${API_BASE_URL}/ai-summary`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,7 +61,7 @@ const PostModal = ({ post, user, onClose, onReplyPosted }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/addreply', {
+      const response = await fetch(`${API_BASE_URL}/addreply`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

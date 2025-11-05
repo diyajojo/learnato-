@@ -5,12 +5,13 @@ import WelcomeBanner from './dashboard/greetings';
 import CreateQuestionForm from './dashboard/createquestion';
 import QuestionCard from './dashboard/questioncard';
 import PostModal from './dashboard/questionmodal';
+import API_BASE_URL from '../utils/api';
 
 // Helper function to load replies for a specific post
 const loadPostReplies = async (postId) => {
   try {
     const accessToken = localStorage.getItem('accessToken');
-    const response = await fetch(`http://localhost:3000/postreplies/${postId}`, {
+    const response = await fetch(`${API_BASE_URL}/postreplies/${postId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -101,7 +102,7 @@ const Dashboard = () => {
     setLoadingQuestions(true); 
     setError('');
     try {
-      const endpoint = view === 'my_questions' ? `http://localhost:3000/myposts` : `http://localhost:3000/allposts`; 
+      const endpoint = view === 'my_questions' ? `${API_BASE_URL}/myposts` : `${API_BASE_URL}/allposts`; 
 
       const accessToken = localStorage.getItem('accessToken');
       const response = await fetch(endpoint, {
@@ -172,7 +173,7 @@ const Dashboard = () => {
 
     try {
       // Send API request
-      const response = await fetch('http://localhost:3000/toggleupvote', {
+      const response = await fetch(`${API_BASE_URL}/toggleupvote`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

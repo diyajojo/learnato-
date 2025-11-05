@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import API_BASE_URL from '../../utils/api';
 import { Loader2 } from 'lucide-react';
 
 const CreateQuestionForm = ({ user, onQuestionCreated, onCancel }) => {
@@ -20,7 +21,7 @@ const CreateQuestionForm = ({ user, onQuestionCreated, onCancel }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/addpost', {
+      const response = await fetch(`${API_BASE_URL}/addpost`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
