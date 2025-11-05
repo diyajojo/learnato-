@@ -1,23 +1,32 @@
-// server.js
-
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config(); // Load environment variables from .env
+require('dotenv').config();
+
+const authRoutes = require('./routes/auth');
 
 const app = express();
-const port = process.env.PORT || 5000; // Use port from .env or default to 5000
+
+// CORS Configuration
+const corsOptions = {
+  origin: 'http://localhost:5173', // Your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Allow credentials
+  optionsSuccessStatus: 200
+};
 
 // Middleware
-app.use(cors());
-app.use(express.json()); // To parse JSON bodies
+app.use(cors(corsOptions));
+app.use(express.json());
 
-// Define a simple API route
+// Routes
 app.get('/', (req, res) => {
   res.send('Hello from the Express Backend!');
 });
 
+app.use('/auth', authRoutes);
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port: 8000`);
+const PORT = 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

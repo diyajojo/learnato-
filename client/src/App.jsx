@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-route
 import FeatureCard from './components/FeatureCard';
 import Loader from './components/Loader';
 import Auth from './components/auth';
+import Dashboard from './components/Dashboard';
 import { Book } from 'lucide-react';
 import './App.css';
 
@@ -88,6 +89,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<MainContent />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
