@@ -28,6 +28,14 @@ router.get('/', async (req, res) => { // <-- 1. Removed /:userId from URL
                     full_name,
                     email
                 )
+            replies (
+                    *,
+                    users:user_id (
+                        id,
+                        full_name,
+                        email
+                    )
+                )
             `)
             .order('created_at', { ascending: false });
 
@@ -38,7 +46,8 @@ router.get('/', async (req, res) => { // <-- 1. Removed /:userId from URL
 
         // 5. Filter out the user's own posts (using the *secure* ID from the token)
         const filteredPosts = posts.filter(post => post.user_id !== user.id);
-        res.json(filteredPosts);
+        console.log('Sending posts:', JSON.stringify(posts, null, 2));
+        res.json(posts);
 
     } catch (error) {
         console.error('Error fetching all posts:', error);
