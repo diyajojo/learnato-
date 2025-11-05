@@ -1384,4 +1384,110 @@
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border-color: white;
-}}
+}
+.ai-summary-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px); /* Add blur to match other modal */
+}
+
+.ai-summary-content {
+  background: #0f3a53; /* Match main modal background */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Match modal border */
+  border-radius: 0.75rem; /* 12px */
+  padding: 0; /* Remove padding, header/body will handle it */
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow: hidden; /* Hide overflow, body will scroll */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0; /* Remove margin */
+  padding: 1rem 1.5rem; /* Add padding */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.ai-summary-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* 12px */
+  color: #FF8C5A; /* Accent color */
+}
+
+.ai-summary-title-group h3 {
+  font-size: 1.25rem;
+  color: #FF8C5A; /* Accent color */
+  font-weight: 600;
+  margin: 0;
+}
+
+.ai-summary-icon {
+  color: #FF8C5A; /* Accent color */
+}
+
+.ai-summary-body {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  padding: 1.5rem;
+  overflow-y: auto; /* Make body scrollable, not whole modal */
+}
+
+.ai-summary-section {
+  margin-bottom: 1.5rem;
+}
+
+.ai-summary-section:last-child {
+  margin-bottom: 0;
+}
+
+.ai-summary-section h4 {
+  font-size: 0.875rem; /* 14px */
+  font-weight: 600;
+  color: #FF8C5A; /* Accent color */
+  text-transform: uppercase;
+  margin-bottom: 0.5rem; /* 8px */
+}
+
+.ai-summary-section p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+/* Handle newlines from text split */
+.ai-summary-line {
+  margin-bottom: 1rem; /* Add space between paragraphs */
+}
+.ai-summary-line:last-child {
+  margin-bottom: 0;
+}
+
+/* Ensure close button matches other modal */
+.ai-summary-content .modal-close {
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.3s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ai-summary-content .modal-close:hover {
+  color: white;
+}
+}
