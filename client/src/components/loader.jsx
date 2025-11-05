@@ -45,8 +45,8 @@ const Loader = () => {
           fontSize: '2.25rem',
           fontWeight: 700
         }}>
-          <span style={{ color: 'white' }}>Study</span>
-          <span style={{ color: '#FF8C5A' }}>GPT</span>
+          <span style={{ color: 'white' }}>LEARNATO</span>
+          <span style={{ color: '#FF8C5A' }}>AI</span>
         </div>
       </div>
 

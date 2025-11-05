@@ -5,12 +5,12 @@ const cors = require("cors");
 // Import routes
 const signup = require("./routes/auth/signup");
 const login = require("./routes/auth/login.js");
-const addpost = require("./routes/addpost.js");
+const addpost = require("./routes/posts/addpost.js");
 const myposts = require("./routes/posts/myposts");
 const allposts = require("./routes/posts/allposts");
-const addreply = require("./routes/addreply.js");
+const addreply = require("./routes/posts/addreply.js");
 const postreplies = require("./routes/posts/postreplies");
-const toggleupvote = require("./routes/upvote");
+const toggleupvote = require("./routes/posts/upvote.js");
 const aiSummary = require("./routes/ai-summary");
 
 const app = express();
@@ -36,7 +36,6 @@ app.use("/toggleupvote", toggleupvote);
 app.use("/ai-summary", aiSummary);
 
 const PORT =3000;
-// ... (listen) ...
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

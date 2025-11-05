@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Book, Plus, Loader2, User, MessageSquare, X, CornerDownRight, ThumbsUp, Bot,
-  Settings, HelpCircle // <-- IMPORTED NEW ICONS
-} from 'lucide-react';
+import { Book, Plus, Loader2 } from 'lucide-react';
+import WelcomeBanner from './dashboard/greetings';
+import CreateQuestionForm from './dashboard/createquestion';
+import QuestionCard from './dashboard/questioncard';
+import PostModal from './dashboard/questionmodal';
 
 // Function to load replies for a specific post
 const loadPostReplies = async (postId) => {
@@ -27,10 +28,7 @@ const loadPostReplies = async (postId) => {
   }
 };
 
-/**
- * Helper function to safely get a user's display name.
- * Falls back to email, then to 'Unknown User'.
- */
+
 const getUserFullName = (u) => {
   return u?.full_name || u?.email || 'Unknown User';
 };
@@ -286,13 +284,6 @@ const PostModal = ({ post, user, onClose, onReplyPosted }) => {
     </div>
   );
 };
-
-// --- CreatePostForm component (renamed to CreateQuestionForm) ---
-const CreateQuestionForm = ({ user, onQuestionCreated, onCancel }) => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleCreateQuestion = async (e) => {
     e.preventDefault();
@@ -695,11 +686,11 @@ const Dashboard = () => {
 
       {/* Modal */}
       {selectedQuestion && (
-        <PostModal 
-          post={selectedQuestion} 
-          user={user} 
-          onClose={() => setSelectedQuestion(null)} 
-          onReplyPosted={handleReplyPosted} 
+        <PostModal
+          post={selectedQuestion}
+          user={user}
+          onClose={() => setSelectedQuestion(null)}
+          onReplyPosted={handleReplyPosted}
         />
       )}
     </div>
