@@ -107,18 +107,14 @@ const Auth = () => {
 
       setSuccess('Signup successful! Please check your email and then login.');
       
-      // Clear form
+    
       setSignupData({
         fullName: '',
         email: '',
         password: ''
       });
 
-      // Switch to login tab after 2 seconds
-      setTimeout(() => {
-        setIsLogin(true);
-        setSuccess('');
-      }, 2000);
+     
 
     } catch (err) {
       console.error('Signup error:', err);
