@@ -5,6 +5,8 @@ const cors = require("cors");
 const signup = require("./routes/auth/signup");
 const login = require("./routes/auth/login.js");
 const addpost = require("./routes/addpost.js");
+const myposts = require("./routes/posts/myposts");
+const allposts = require("./routes/posts/allposts");
 
 
 const app = express();
@@ -22,6 +24,8 @@ app.get("/", (req, res) => {
 app.use("/signup", signup);
 app.use("/login", login);
 app.use("/addpost", addpost);
+app.use("/myposts", myposts);
+app.use("/allposts", allposts);
 
 
 const PORT =3000;

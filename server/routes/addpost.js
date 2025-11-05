@@ -2,11 +2,6 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../utils/supabase');
 
-/**
- * @route   POST /posts
- * @desc    Create a new post
- * @access  Private
- */
 router.post('/', async (req, res) => {
   try {
     // 1. Get the user's token from the Authorization header

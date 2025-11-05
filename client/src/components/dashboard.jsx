@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Book, Plus, Loader2 } from 'lucide-react'; // Import icons
+import { Book, Plus, Loader2, User, Users } from 'lucide-react'; // Import icons
 
 // This is the new form component, kept inside dashboard.jsx for simplicity
 const CreatePostForm = ({ user, onPostCreated, onCancel }) => {
@@ -126,8 +126,8 @@ const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [view, setView] = useState('all_posts'); // 'all_posts', 'my_posts', 'create_post'
   const [posts, setPosts] = useState([]);
-  const [myPosts, setMyPosts] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(false);
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
@@ -141,12 +141,42 @@ const Dashboard = () => {
       return;
     }
 
-    setUser(JSON.parse(storedUser));
+    const parsedUser = JSON.parse(storedUser);
+    setUser(parsedUser);
     
-    // We will fetch posts here later
-    // fetchAllPosts();
+    // Fetch posts based on current view
+    fetchPosts(parsedUser);
+  }, [navigate, view]);
 
-  }, [navigate]);
+  const fetchPosts = async (currentUser) => {
+    if (!currentUser) return;
+    
+    setLoadingPosts(true);
+    setError('');
+    try {
+      const endpoint = view === 'my_posts' 
+        ? `http://localhost:3000/myposts/${currentUser.id}`
+        : `http://localhost:3000/allposts/${currentUser.id}`;
+
+      const accessToken = localStorage.getItem('accessToken');
+      const response = await fetch(endpoint, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch posts');
+      }
+      const data = await response.json();
+      setPosts(data);
+    } catch (err) {
+      setError('Failed to load posts. Please try again later.');
+      console.error('Error fetching posts:', err);
+    } finally {
+      setLoadingPosts(false);
+    }
+  };
 
   const handleLogout = async () => {
     // ... (your existing logout logic) ...
@@ -157,9 +187,10 @@ const Dashboard = () => {
   };
 
   const handlePostCreated = (newPost) => {
-    // Add new post to our lists and switch view
-    setPosts([newPost, ...posts]);
-    setMyPosts([newPost, ...myPosts]);
+    // Update posts if we're in the relevant view
+    if (view === 'my_posts' || view === 'all_posts') {
+      setPosts(prevPosts => [newPost, ...prevPosts]);
+    }
     setView('all_posts'); // Switch back to all posts view
   };
 
@@ -269,23 +300,50 @@ const Dashboard = () => {
             />
           )}
 
-          {view === 'all_posts' && (
+          {(view === 'all_posts' || view === 'my_posts') && (
             <div className="p-8 bg-white/5 rounded-xl border border-white/10">
-              <h2 className="text-2xl font-bold text-white mb-4">All Posts</h2>
-              <p className="text-white/70">
-                {/* We will load and display all posts here in the next step. */}
-                (Placeholder for all posts)
-              </p>
-            </div>
-          )}
-
-          {view === 'my_posts' && (
-            <div className="p-8 bg-white/5 rounded-xl border border-white/10">
-              <h2 className="text-2xl font-bold text-white mb-4">My Posts</h2>
-              <p className="text-white/70">
-                {/* We will load and display *only* this user's posts here. */}
-                (Placeholder for my posts)
-              </p>
+              <h2 className="text-2xl font-bold text-white mb-4">
+                {view === 'all_posts' ? 'All Posts' : 'My Posts'}
+              </h2>
+              
+              {loadingPosts ? (
+                <div className="flex justify-center items-center py-12">
+                  <Loader2 className="w-8 h-8 animate-spin text-white/70" />
+                </div>
+              ) : error ? (
+                <div className="text-red-400 p-4 bg-red-400/10 rounded-lg">
+                  {error}
+                </div>
+              ) : posts.length === 0 ? (
+                <div className="text-center py-12">
+                  <Book className="w-12 h-12 mx-auto text-white/30 mb-4" />
+                  <p className="text-white/50">
+                    {view === 'my_posts' 
+                      ? "You haven't created any posts yet"
+                      : "No posts available"}
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {posts.map((post) => (
+                    <div
+                      key={post.id}
+                      className="p-6 bg-white/10 rounded-lg border border-white/10 hover:border-white/20 transition-all"
+                    >
+                      <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
+                      <p className="text-white/70 mb-4">{post.content}</p>
+                      <div className="flex justify-between items-center text-sm text-white/50">
+                        <span>Posted by {post.user_id === user.id ? 'you' : post.users?.full_name}</span>
+                        <span>{new Date(post.created_at).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
