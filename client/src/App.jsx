@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Loader from './components/Loader';
+import Loader from './components/loader';
 import Auth from './components/auth';
 import Dashboard from './components/dashboard';
 import LandingPage from './pages/landing';

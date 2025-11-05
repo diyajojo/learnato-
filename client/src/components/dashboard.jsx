@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Book, Plus, Loader2 } from 'lucide-react';
-
-// Import all the components from their files
 import WelcomeBanner from './dashboard/greetings';
 import CreateQuestionForm from './dashboard/createquestion';
 import QuestionCard from './dashboard/questioncard';
