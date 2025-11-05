@@ -80,7 +80,10 @@ This platform is designed for learners and instructors to post questions, share 
     ```
     The React app will be running on `http://localhost:5173` locally.
 
-## API Endpoints
+##  API Endpoints
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
 | `POST` | `/signup` | Creates a new user in Supabase Auth and the `users` table. |
 | `POST` | `/login` | Signs in a user and returns a session token and user data. |
 | `POST` | `/addpost` | (Auth protected) Adds a new question to the `posts` table. |
@@ -88,5 +91,5 @@ This platform is designed for learners and instructors to post questions, share 
 | `GET` | `/allposts` | (Auth protected) Fetches all posts, excluding the user's own. |
 | `GET` | `/myposts` | (Auth protected) Fetches only the posts created by the current user. |
 | `GET` | `/postreplies/:postId` | (Auth protected) Fetches all replies for a specific post. |
-| `POST` | `/toggleupvote` | (Auth protected) Adds or removes an upvote from a post for the current user. |
-| `POST` | `/ai-summary` | (Auth protected) Generates a summary for a given title and content using Grok. |
+| `POST` | `/toggleupvote` | (Auth protected) Adds or removes an upvote from a post. |
+| `POST` | `/ai-summary` | (Auth protected) Generates a summary using Grok. |
