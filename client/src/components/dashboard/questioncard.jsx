@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, MessageSquare, ThumbsUp } from 'lucide-react';
+import { User, MessageSquare, ThumbsUp, Clock, Calendar } from 'lucide-react';
 
 const getUserFullName = (u) => {
   return u?.full_name || u?.email || 'Unknown User';
@@ -16,14 +16,30 @@ const QuestionCard = ({ question, user, onQuestionClick, onUpvote, upvoting }) =
       >
         <h3 className="post-card-title">{question.title}</h3>
         
-        <div className="post-card-meta">
+        {/* Author and Date */}
+        <div className="post-card-meta mb-3">
           <div className="meta-icon">
             <User size={16} />
             <span>Asked by {getUserFullName(question.users)}</span>
           </div>
           <div className="meta-icon">
+            <Clock size={16} />
+            <span>{new Date(question.created_at).toLocaleString()}</span>
+          </div>
+        </div>
+
+        {/* Stats Section */}
+        <div className="post-card-stats">
+          <div className="stat-item">
             <MessageSquare size={16} />
-            <span>{question.replies?.length || 0} Answers</span>
+            <span className="stat-value">{question.replies?.length || 0}</span>
+            <span className="stat-label">Replies</span>
+          </div>
+          
+          <div className="stat-item">
+            <ThumbsUp size={16} />
+            <span className="stat-value">{question.upvotes.length}</span>
+            <span className="stat-label">Upvotes</span>
           </div>
           
           {/* Upvote Button */}
@@ -36,7 +52,7 @@ const QuestionCard = ({ question, user, onQuestionClick, onUpvote, upvoting }) =
             className={`meta-icon upvote-button ${isUpvoted ? 'active' : ''}`}
           >
             <ThumbsUp size={16} />
-            <span>{question.upvotes.length}</span>
+            <span>{upvoting === question.id ? 'Updating...' : 'Upvote'}</span>
           </button>
         </div>
       </div>

@@ -191,6 +191,9 @@ const Auth = () => {
         {/* Form Container */}
         <div className="auth-form-container">
           <div className={`form-slide ${isLogin ? 'login' : 'login-hidden'}`}>
+            <h2 className="text-2xl font-bold text-center mb-6 text-white">
+              Welcome back to Learnato
+            </h2>
             {/* Login Form */}
             <form className="auth-form" onSubmit={handleLogin}>
               <div>
@@ -228,6 +231,9 @@ const Auth = () => {
           </div>
 
           <div className={`form-slide ${!isLogin ? 'signup' : 'signup-hidden'}`}>
+            <h2 className="text-2xl font-bold text-center mb-6 text-white">
+              Join Learnato today
+            </h2>
             {/* Sign Up Form */}
             <form className="auth-form" onSubmit={handleSignup}>
               <div>

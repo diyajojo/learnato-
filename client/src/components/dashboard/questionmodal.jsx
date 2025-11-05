@@ -133,16 +133,7 @@ const PostModal = ({ post, user, onClose, onReplyPosted }) => {
               </p>
             )}
 
-            <div className="question-meta">
-              <User size={16} />
-              <span>
-                Asked by {getUserFullName(post.users)} on {new Date(post.created_at).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </span>
-            </div>
+    
           </div>
 
           {/* Answers */}
