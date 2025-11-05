@@ -26,15 +26,16 @@ router.get('/', async (req, res) => { // <-- 1. Removed /:userId from URL
                     id,
                     full_name,
                     email
-                )
-            replies (
+                ),
+                replies (
                     *,
                     users:user_id (
                         id,
                         full_name,
                         email
                     )
-                )
+                ),
+                upvotes ( user_id )
             `)
             .eq('user_id', user.id) 
             .order('created_at', { ascending: false });

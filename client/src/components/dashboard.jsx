@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Book, Plus, Loader2, User, MessageSquare, X, CornerDownRight } from 'lucide-react';
+import { 
+  Book, Plus, Loader2, User, MessageSquare, X, CornerDownRight, ThumbsUp 
+} from 'lucide-react';
 
 // Function to load replies for a specific post
 const loadPostReplies = async (postId) => {
@@ -22,6 +24,14 @@ const loadPostReplies = async (postId) => {
     console.error('Error loading replies:', error);
     return [];
   }
+};
+
+/**
+ * Helper function to safely get a user's display name.
+ * Falls back to email, then to 'Unknown User'.
+ */
+const getUserFullName = (u) => {
+  return u?.full_name || u?.email || 'Unknown User';
 };
 
 const PostModal = ({ post, user, onClose, onReplyPosted }) => {
@@ -70,15 +80,12 @@ const PostModal = ({ post, user, onClose, onReplyPosted }) => {
     }
   };
 
-  // Helper for safely reading user name
-  const getUserFullName = (u) => u?.full_name || 'Anonymous';
-
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="modal-header">
-          <h2 className="modal-title">Discussion</h2>
+          <h2 className="modal-title">Question Details</h2>
           <button onClick={onClose} className="modal-close">
             <X size={28} />
           </button>
@@ -88,26 +95,24 @@ const PostModal = ({ post, user, onClose, onReplyPosted }) => {
         <div className="modal-body">
           {/* Post Content */}
           <div>
-            <div className="question-label">Title:</div>
+            <div className="question-label">Question:</div>
             <h3 className="question-title">{post.title}</h3>
 
             <div className="question-label" style={{ marginTop: '1.5rem' }}>
-              Content:
+              Details:
             </div>
             {post.content ? (
               <p className="question-content">{post.content}</p>
             ) : (
               <p className="question-content" style={{ fontStyle: 'italic', opacity: 0.7 }}>
-                No content provided
+                No details provided
               </p>
             )}
 
             <div className="question-meta">
               <User size={16} />
-              <span>Posted by {getUserFullName(post.users)}</span>
-              <span>•</span>
               <span>
-                {new Date(post.created_at).toLocaleDateString('en-US', {
+                Asked by {getUserFullName(post.users)} on {new Date(post.created_at).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
@@ -181,14 +186,14 @@ const PostModal = ({ post, user, onClose, onReplyPosted }) => {
   );
 };
 
-// --- CreatePostForm component (kept inside dashboard.jsx for simplicity) ---
-const CreatePostForm = ({ user, onPostCreated, onCancel }) => {
+// --- CreatePostForm component (renamed to CreateQuestionForm) ---
+const CreateQuestionForm = ({ user, onQuestionCreated, onCancel }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleCreatePost = async (e) => {
+  const handleCreateQuestion = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -217,10 +222,10 @@ const CreatePostForm = ({ user, onPostCreated, onCancel }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create post');
+        throw new Error(data.error || 'Failed to create question');
       }
 
-      onPostCreated(data.post || data);
+      onQuestionCreated(data.post || data); // data.post is what the server sends
       setTitle('');
       setContent('');
     } catch (err) {
@@ -232,21 +237,21 @@ const CreatePostForm = ({ user, onPostCreated, onCancel }) => {
 
   return (
     <div className="create-post-form">
-      <h2 className="create-post-title">Create a New Post</h2>
+      <h2 className="create-post-title">Ask a New Question</h2>
 
       {error && <div className="create-post-error">{error}</div>}
 
-      <form onSubmit={handleCreatePost}>
+      <form onSubmit={handleCreateQuestion}>
         <div className="form-field">
           <label htmlFor="title" className="form-label">
-            Title
+            Question Title
           </label>
           <input
             id="title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter your post title"
+            placeholder="What's your question?"
             className="form-input"
             required
           />
@@ -254,13 +259,13 @@ const CreatePostForm = ({ user, onPostCreated, onCancel }) => {
 
         <div className="form-field">
           <label htmlFor="content" className="form-label">
-            Content
+            Details
           </label>
           <textarea
             id="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Enter your post content..."
+            placeholder="Add more details about your question..."
             rows="8"
             className="form-input"
           />
@@ -277,7 +282,7 @@ const CreatePostForm = ({ user, onPostCreated, onCancel }) => {
                 Posting...
               </>
             ) : (
-              'Create Post'
+              'Post Question'
             )}
           </button>
         </div>
@@ -288,30 +293,31 @@ const CreatePostForm = ({ user, onPostCreated, onCancel }) => {
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
-  const [view, setView] = useState('all_posts');
-  const [posts, setPosts] = useState([]);
-  const [loadingPosts, setLoadingPosts] = useState(false);
+  const [view, setView] = useState('all_questions');
+  const [questions, setQuestions] = useState([]);
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
   const [error, setError] = useState('');
-  const [selectedPost, setSelectedPost] = useState(null);
-
-  // Track if we need to refresh posts
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [shouldRefresh, setShouldRefresh] = useState(false);
+  
+  // Add loading state for upvotes
+  const [upvoting, setUpvoting] = useState(null); 
 
   const navigate = useNavigate();
 
   // Single handler for when a reply is posted from the modal
   const handleReplyPosted = async (newReply) => {
     try {
-      if (!selectedPost) return;
+      if (!selectedQuestion) return; 
       // Refresh replies for the selected post
-      const replies = await loadPostReplies(selectedPost.id);
+      const replies = await loadPostReplies(selectedQuestion.id); 
 
-      // Update selectedPost with fresh replies
-      setSelectedPost((prev) => ({ ...prev, replies }));
+      // Update selectedQuestion with fresh replies
+      setSelectedQuestion((prev) => ({ ...prev, replies })); 
 
-      // Update posts list so counts / previews stay in sync
-      setPosts((prevPosts) =>
-        prevPosts.map((p) => (p.id === selectedPost.id ? { ...p, replies } : p))
+      // Update questions list so counts / previews stay in sync
+      setQuestions((prevQuestions) => 
+        prevQuestions.map((p) => (p.id === selectedQuestion.id ? { ...p, replies } : p)) 
       );
 
       // optional: trigger full posts refresh if you rely on server-side ordering
@@ -335,8 +341,8 @@ const Dashboard = () => {
     setUser(parsedUser);
 
     // Fetch posts when component mounts or view changes or when shouldRefresh is set
-    if (view === 'all_posts' || view === 'my_posts') {
-      fetchPosts(parsedUser);
+    if (view === 'all_questions' || view === 'my_questions') { 
+      fetchQuestions(parsedUser); 
     }
 
     // Reset refresh flag after fetching
@@ -345,13 +351,13 @@ const Dashboard = () => {
     }
   }, [navigate, view, shouldRefresh]);
 
-  const fetchPosts = async (currentUser) => {
+  const fetchQuestions = async (currentUser) => { 
     if (!currentUser) return;
 
-    setLoadingPosts(true);
+    setLoadingQuestions(true); 
     setError('');
     try {
-      const endpoint = view === 'my_posts' ? `http://localhost:3000/myposts` : `http://localhost:3000/allposts`;
+      const endpoint = view === 'my_questions' ? `http://localhost:3000/myposts` : `http://localhost:3000/allposts`; 
 
       const accessToken = localStorage.getItem('accessToken');
       const response = await fetch(endpoint, {
@@ -362,16 +368,16 @@ const Dashboard = () => {
 
       if (!response.ok) {
         const errData = await response.json();
-        throw new Error(errData.error || 'Failed to fetch posts');
+        throw new Error(errData.error || 'Failed to fetch questions'); 
       }
       const data = await response.json();
-      console.log('Fetched posts:', data); // Debug log
-      setPosts(data);
+      console.log('Fetched questions:', data); // Debug log
+      setQuestions(data); 
     } catch (err) {
-      setError(err.message || 'Failed to load posts. Please try again later.');
-      console.error('Error fetching posts:', err);
+      setError(err.message || 'Failed to load questions. Please try again later.'); 
+      console.error('Error fetching questions:', err); 
     } finally {
-      setLoadingPosts(false);
+      setLoadingQuestions(false); 
     }
   };
 
@@ -382,22 +388,77 @@ const Dashboard = () => {
     navigate('/');
   };
 
-  const handlePostCreated = (newPost) => {
+  const handleQuestionCreated = (newQuestion) => { 
     // Add new post to state
-    setPosts((prevPosts) => [newPost, ...prevPosts]);
-    setView('all_posts'); // Switch back to all posts view
+    setQuestions((prevQuestions) => [newQuestion, ...prevQuestions]); 
+    setView('all_questions'); // Switch back to all posts view
   };
 
-  // Helper to get button styles
-  const getButtonClass = (buttonView) => {
-    const base = 'px-5 py-2 rounded-lg font-semibold transition-all';
-    if (view === buttonView) {
-      return `${base} bg-[#FF8C5A] text-white shadow-lg`;
+  // Add new handler for upvoting
+  const handleToggleUpvote = async (questionId) => {
+    if (upvoting === questionId) return; // Prevent double-clicks
+    setUpvoting(questionId);
+
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      setError('You must be logged in to upvote.');
+      setUpvoting(null);
+      return;
     }
-    return `${base} bg-white/10 text-white/70 hover:bg-white/20`;
+
+    // Keep a copy of old state for rollback
+    const originalQuestions = [...questions];
+
+    // Optimistic UI Update: Update UI *before* API call
+    setQuestions(prevQuestions => 
+      prevQuestions.map(q => {
+        if (q.id === questionId) {
+          const alreadyUpvoted = q.upvotes.some(uv => uv.user_id === user.id);
+          if (alreadyUpvoted) {
+            // Optimistically REMOVE upvote
+            return { ...q, upvotes: q.upvotes.filter(uv => uv.user_id !== user.id) };
+          } else {
+            // Optimistically ADD upvote
+            return { ...q, upvotes: [...q.upvotes, { user_id: user.id, post_id: questionId }] };
+          }
+        }
+        return q;
+      })
+    );
+
+    try {
+      // Send API request
+      const response = await fetch('http://localhost:3000/toggleupvote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ post_id: questionId }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to toggle upvote');
+      }
+
+      // Sync server state to ensure count is accurate
+      setQuestions(prevQuestions => 
+        prevQuestions.map(q => 
+          q.id === questionId ? { ...q, upvotes: data.upvotes } : q
+        )
+      );
+
+    } catch (err) {
+      console.error('Upvote error:', err);
+      setError(err.message);
+      setQuestions(originalQuestions); // Rollback UI on API error
+    } finally {
+      setUpvoting(null);
+    }
   };
 
-  const getUserFullName = (u) => u?.full_name || 'Anonymous';
 
   if (!user) {
     return (
@@ -430,96 +491,84 @@ const Dashboard = () => {
         {/* View Navigation */}
         <div className="view-nav">
           <div className="nav-buttons">
-            <button className={`nav-button ${view === 'all_posts' ? 'active' : 'inactive'}`} onClick={() => setView('all_posts')}>
-              All Posts
+            <button className={`nav-button ${view === 'all_questions' ? 'active' : 'inactive'}`} onClick={() => setView('all_questions')}>
+              All Questions
             </button>
-            <button className={`nav-button ${view === 'my_posts' ? 'active' : 'inactive'}`} onClick={() => setView('my_posts')}>
-              My Posts
+            <button className={`nav-button ${view === 'my_questions' ? 'active' : 'inactive'}`} onClick={() => setView('my_questions')}>
+              My Questions
             </button>
           </div>
-          <button className="create-button" onClick={() => setView('create_post')}>
+          <button className="create-button" onClick={() => setView('create_question')}>
             <Plus size={18} />
-            Create Post
+            Ask Question
           </button>
         </div>
 
         {/* Conditional View */}
         <div className="mt-6">
-          {view === 'create_post' && (
-            <CreatePostForm user={user} onPostCreated={handlePostCreated} onCancel={() => setView('all_posts')} />
+          {view === 'create_question' && (
+            <CreateQuestionForm user={user} onQuestionCreated={handleQuestionCreated} onCancel={() => setView('all_questions')} />
           )}
 
-          {(view === 'all_posts' || view === 'my_posts') && (
-            <div className="posts-container">
-              <h2 className="section-title">{view === 'all_posts' ? 'All Posts' : 'My Posts'}</h2>
-
-              {loadingPosts ? (
+          {(view === 'all_questions' || view === 'my_questions') && (
+            // --- MODIFICATION HERE: Added dynamic 'empty' class ---
+            <div className={`posts-container ${questions.length === 0 ? 'empty' : ''}`}>
+              {loadingQuestions ? (
                 <div className="flex justify-center items-center py-12">
                   <Loader2 className="w-8 h-8 animate-spin text-white/70" />
                 </div>
               ) : error ? (
                 <div className="text-red-400 p-4 bg-red-400/10 rounded-lg">{error}</div>
-              ) : posts.length === 0 ? (
-                <div className="text-center py-12">
-                  <Book className="w-12 h-12 mx-auto text-white/30 mb-4" />
-                  <p className="text-white/50">{view === 'my_posts' ? "You haven't created any posts yet" : 'No posts available'}</p>
+              ) : questions.length === 0 ? (
+                // --- MODIFICATION HERE: Updated empty state classes ---
+                <div className="empty-message-content">
+                  <Book className="icon" />
+                  <p>{view === 'my_questions' ? "You haven't asked any questions yet" : 'No questions available'}</p> 
                 </div>
               ) : (
                 <div className="posts-list">
-                  {posts.map((post) => (
-                    <div key={post.id} className="post-card">
-                      <div
-                        onClick={async () => {
-                          const replies = await loadPostReplies(post.id);
-                          setSelectedPost({ ...post, replies });
-                        }}
-                        style={{ cursor: 'pointer' }}
-                      >
-                        <h3 className="post-card-title">{post.title}</h3>
-                        <div className="post-card-meta">
-                          <div className="meta-icon">
-                            <User size={16} />
-                            <span>Posted by {getUserFullName(post.users)}</span>
-                          </div>
-                          <div className="meta-icon">
-                            <MessageSquare size={16} />
-                            <span>{post.replies?.length || 0} Answers</span>
+                  {questions.map((question) => {
+                    // Check if current user has upvoted
+                    const isUpvoted = question.upvotes.some(uv => uv.user_id === user.id);
+                    
+                    return (
+                      <div key={question.id} className="post-card">
+                        <div
+                          onClick={async () => {
+                            const replies = await loadPostReplies(question.id);
+                            setSelectedQuestion({ ...question, replies });
+                          }}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <h3 className="post-card-title">{question.title}</h3>
+                          
+                          <div className="post-card-meta">
+                            <div className="meta-icon">
+                              <User size={16} />
+                              <span>Asked by {getUserFullName(question.users)}</span>
+                            </div>
+                            <div className="meta-icon">
+                              <MessageSquare size={16} />
+                              <span>{question.replies?.length || 0} Answers</span>
+                            </div>
+                            
+                            {/* Upvote Button */}
+                            <button 
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent modal from opening
+                                handleToggleUpvote(question.id);
+                              }}
+                              disabled={upvoting === question.id}
+                              className={`meta-icon upvote-button ${isUpvoted ? 'active' : ''}`}
+                            >
+                              <ThumbsUp size={16} />
+                              <span>{question.upvotes.length}</span>
+                            </button>
                           </div>
                         </div>
                       </div>
-
-                      {/* Replies Preview (inside each post card) */}
-                      {post.replies && post.replies.length > 0 && (
-                        <div className="post-replies">
-                          <div className="replies-header">
-                            <span className="replies-title">Recent Replies</span>
-                          </div>
-                          <div className="reply-list">
-                            {post.replies.slice(0, 3).map((reply) => (
-                              <div key={reply.id} className="reply-item">
-                                <p className="reply-content">{reply.content}</p>
-                                <div className="reply-meta">
-                                  <span>{getUserFullName(reply.users)}</span>
-                                  <span>•</span>
-                                  <span>
-                                    {new Date(reply.created_at).toLocaleDateString('en-US', {
-                                      month: 'short',
-                                      day: 'numeric',
-                                    })}
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
-                            {post.replies.length > 3 && (
-                              <button onClick={() => setSelectedPost(post)} className="text-[#FF8C5A] text-sm hover:underline mt-1">
-                                View all {post.replies.length} replies...
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -528,8 +577,13 @@ const Dashboard = () => {
       </main>
 
       {/* Modal */}
-      {selectedPost && (
-        <PostModal post={selectedPost} user={user} onClose={() => setSelectedPost(null)} onReplyPosted={handleReplyPosted} />
+      {selectedQuestion && (
+        <PostModal 
+          post={selectedQuestion} 
+          user={user} 
+          onClose={() => setSelectedQuestion(null)} 
+          onReplyPosted={handleReplyPosted} 
+        />
       )}
     </div>
   );

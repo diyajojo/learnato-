@@ -35,8 +35,15 @@ router.post('/', async (req, res) => {
           user_id: user.id // Securely set the user_id from the authenticated user
         }
       ])
-      .select()
-      .single(); // Return the newly created post
+      .select(`
+        *,
+        users:user_id (
+            id,
+            full_name,
+            email
+        )
+      `)
+      .single(); // Return the newly created post with user data
 
     if (insertError) {
       console.error('Supabase Insert Error:', insertError);
