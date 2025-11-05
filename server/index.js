@@ -15,11 +15,25 @@ const aiSummary = require("./routes/ai-summary");
 
 const app = express();
 
-// ... (middleware) ...
+
 app.use(cors());
 app.use(express.json());
 
-// ... (root route) ...
+const allowedOrigins = ['http://localhost:5173', 'https://learnato-ai.vercel.app'];
+
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
