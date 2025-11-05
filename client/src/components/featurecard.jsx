@@ -2,24 +2,19 @@ import React from 'react';
 
 const features = [
   {
-    title: "Upload syllabi and notes",
-    description: "Upload your course materials and get instant smart content analysis to organize your study materials effectively",
-    icon: "📚"
+    title: "Post Questions & Replies",
+    description: "Users can post questions and replies in a seamless conversation flow",
+    icon: "💬"
   },
   {
-    title: "Generate important questions",
-    description: "AI-powered system creates personalized important questions based on your learning materials",
-    icon: "🎯"
+    title: "Upvote System",
+    description: "Each post can be upvoted to highlight the most helpful content",
+    icon: "👍"
   },
   {
-    title: "Sync with Google Calendar",
-    description: "Seamlessly integrate your study schedule with Google Calendar for organized study sessions",
-    icon: "📅"
-  },
-  {
-    title: "Optimize study time",
-    description: "Smart scheduling algorithms optimize your study time with personalized recommendations",
-    icon: "⏰"
+    title: "Dynamic Interface",
+    description: "The interface updates dynamically with real-time interactions",
+    icon: "⚡"
   }
 ];
 
