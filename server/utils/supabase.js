@@ -19,4 +19,4 @@ try {
   throw error;
 }
 
-module.exports = { supabase };
+module.exports = supabase ;

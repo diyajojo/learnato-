@@ -155,8 +155,8 @@ const Dashboard = () => {
     setError('');
     try {
       const endpoint = view === 'my_posts' 
-        ? `http://localhost:3000/myposts/${currentUser.id}`
-        : `http://localhost:3000/allposts/${currentUser.id}`;
+        ? `http://localhost:3000/myposts`
+        : `http://localhost:3000/allposts`;
 
       const accessToken = localStorage.getItem('accessToken');
       const response = await fetch(endpoint, {
