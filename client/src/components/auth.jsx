@@ -42,12 +42,11 @@ const Auth = () => {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:5000/auth/login', {
+      const response = await fetch('http://localhost:5000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',  // if you need to send/receive cookies
         body: JSON.stringify(loginData)
       });
 
@@ -83,12 +82,11 @@ const Auth = () => {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:5000/auth/signup', {
+      const response = await fetch('http://localhost:5000/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',  // if you need to send/receive cookies
         body: JSON.stringify(signupData)
       });
 
