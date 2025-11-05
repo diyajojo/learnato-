@@ -42,10 +42,11 @@ const Auth = () => {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('http://localhost:3000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify(loginData)
       });
@@ -57,9 +58,14 @@ const Auth = () => {
       }
 
       // Store token in localStorage
-      localStorage.setItem('accessToken', data.session.accessToken);
-      localStorage.setItem('refreshToken', data.session.refreshToken);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      if (data.session && data.session.access_token) {
+        localStorage.setItem('accessToken', data.session.access_token);
+        localStorage.setItem('refreshToken', data.session.refresh_token);
+      }
+      
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
 
       setSuccess('Login successful! Redirecting...');
       
@@ -69,7 +75,8 @@ const Auth = () => {
       }, 1000);
 
     } catch (err) {
-      setError(err.message);
+      console.error('Login error:', err);
+      setError(err.message || 'An error occurred during login');
     } finally {
       setLoading(false);
     }
@@ -81,15 +88,17 @@ const Auth = () => {
     setError('');
     setSuccess('');
 
+    console.log('Signup data:', signupData);
     try {
-      const response = await fetch('http://localhost:5000/signup', {
+      const response = await fetch('http://localhost:3000/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify(signupData)
       });
-
+    
       const data = await response.json();
 
       if (!response.ok) {
@@ -112,7 +121,8 @@ const Auth = () => {
       }, 2000);
 
     } catch (err) {
-      setError(err.message);
+      console.error('Signup error:', err);
+      setError(err.message || 'An error occurred during signup');
     } finally {
       setLoading(false);
     }
