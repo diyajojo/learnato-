@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Book, Plus, Loader2, User, MessageSquare, X, CornerDownRight, ThumbsUp 
+  Book, Plus, Loader2, User, MessageSquare, X, CornerDownRight, ThumbsUp, Bot
 } from 'lucide-react';
 
 // Function to load replies for a specific post
@@ -34,10 +34,63 @@ const getUserFullName = (u) => {
   return u?.full_name || u?.email || 'Unknown User';
 };
 
+const SummaryPopup = ({ summary, onClose }) => {
+  return (
+    <div className="ai-summary-overlay" onClick={onClose}>
+      <div className="ai-summary-content" onClick={(e) => e.stopPropagation()}>
+        <div className="ai-summary-header">
+          <h3>AI Summary</h3>
+          <button onClick={onClose} className="modal-close">
+            <X size={20} />
+          </button>
+        </div>
+        <div className="ai-summary-body">
+          <p>{summary}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const PostModal = ({ post, user, onClose, onReplyPosted }) => {
   const [replyContent, setReplyContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [aiSummary, setAiSummary] = useState('');
+  const [showSummary, setShowSummary] = useState(false);
+  const [summarizing, setSummarizing] = useState(false);
+
+  const handleGetAiSummary = async () => {
+    setSummarizing(true);
+    try {
+      const response = await fetch('http://localhost:3000/ai-summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify({
+          title: post.title,
+          content: post.content
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      setAiSummary(data.summary);
+      setShowSummary(true);
+    } catch (err) {
+      console.error('Error getting AI summary:', err);
+      setError(err.message || 'Failed to get AI summary');
+    } finally {
+      setSummarizing(false);
+    }
+  };
 
   const handleAddReply = async (e) => {
     e.preventDefault();
@@ -95,12 +148,28 @@ const PostModal = ({ post, user, onClose, onReplyPosted }) => {
         <div className="modal-body">
           {/* Post Content */}
           <div>
-            <div className="question-label">Question:</div>
+            <div className="question-header">
+              <div className="question-label">Question:</div>
+              <button 
+                onClick={handleGetAiSummary}
+                disabled={summarizing}
+                className="ai-summary-button"
+              >
+                <Bot size={16} />
+                {summarizing ? 'Analyzing...' : 'Ask AI to Summarize'}
+              </button>
+            </div>
             <h3 className="question-title">{post.title}</h3>
 
             <div className="question-label" style={{ marginTop: '1.5rem' }}>
               Details:
             </div>
+            {showSummary && (
+              <SummaryPopup
+                summary={aiSummary}
+                onClose={() => setShowSummary(false)}
+              />
+            )}
             {post.content ? (
               <p className="question-content">{post.content}</p>
             ) : (

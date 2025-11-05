@@ -10,7 +10,8 @@ const myposts = require("./routes/posts/myposts");
 const allposts = require("./routes/posts/allposts");
 const addreply = require("./routes/addreply.js");
 const postreplies = require("./routes/posts/postreplies");
-const toggleupvote = require("./routes/upvote.js"); // <-- 1. IMPORT
+const toggleupvote = require("./routes/upvote");
+const aiSummary = require("./routes/ai-summary");
 
 const app = express();
 
@@ -31,7 +32,8 @@ app.use("/myposts", myposts);
 app.use("/allposts", allposts);
 app.use("/addreply", addreply);
 app.use("/postreplies", postreplies);
-app.use("/toggleupvote", toggleupvote); // <-- 2. USE THE ROUTE
+app.use("/toggleupvote", toggleupvote);
+app.use("/ai-summary", aiSummary);
 
 const PORT =3000;
 // ... (listen) ...
