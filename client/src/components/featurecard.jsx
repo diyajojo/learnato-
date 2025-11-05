@@ -2,19 +2,19 @@ import React from 'react';
 
 const features = [
   {
-    title: "Post Questions & Replies",
-    description: "Users can post questions and replies in a seamless conversation flow",
+    title: "Ask & Answer",
+    description: "Post your toughest questions to the community and share your insights to help others learn.",
     icon: "💬"
   },
   {
-    title: "Upvote System",
-    description: "Each post can be upvoted to highlight the most helpful content",
+    title: "Smart Upvoting",
+    description: "Upvote the most helpful answers and questions to highlight the best content for everyone.",
     icon: "👍"
   },
   {
-    title: "Dynamic Interface",
-    description: "The interface updates dynamically with real-time interactions",
-    icon: "⚡"
+    title: "Instant AI Summaries",
+    description: "Get a quick summary of any long question or discussion thread with the built-in Learnato AI.",
+    icon: "🤖"
   }
 ];
 

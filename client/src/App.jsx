@@ -49,10 +49,11 @@ const MainContent = () => {
 
       <div className="hero-section">
         <h1 className="hero-title">
-          Your AI Study Assistant
+          Empower Learning Through Conversation
         </h1>
         <p className="hero-description">
-          Transform your study routine with personalized learning schedules, smart analysis, and integrated calendar management
+          Join a community of learners and instructors. Post questions, share insights,
+          and get answers in real time on the Learnato platform.
         </p>
         
         <div className="features-container">

@@ -98,6 +98,67 @@
   width: 100%;
   max-width: 28rem;
   position: relative;
+}
+
+/* Welcome Section Styles */
+.welcome-banner {
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  color: white;
+}
+
+.welcome-pfp {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome-text {
+  flex: 1;
+}
+
+.welcome-text h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-text p {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1rem;
+}
+
+.welcome-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.welcome-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.welcome-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
   overflow: hidden;
 }
 
@@ -1097,6 +1158,230 @@
   margin: 0 auto 1rem auto;
   color: rgba(255, 255, 255, 0.3);
 }
+/* ======================================= */
+/* === UPDATED STYLES FOR DASHBOARD UI === */
+/* ======================================= */
 
-
+.dashboard-main {
+  padding: 1.5rem; /* Adjusted padding for main content */
 }
+
+.dashboard-welcome {
+  display: flex;
+  align-items: center; /* Vertically align items */
+  gap: 1.5rem; /* Space between image and text/buttons */
+  margin-bottom: 2rem;
+  padding: 1.5rem 2rem; /* More horizontal padding */
+  background: rgba(255, 255, 255, 0.05); /* Slightly visible background */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+  border-radius: 0.75rem; /* Rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Soft shadow */
+}
+
+.user-pfp {
+  width: 100px; /* Reduced image size */
+  height: 100px; /* Reduced image size */
+  border-radius: 50%; /* Make it perfectly circular */
+  object-fit: cover; /* Ensure image covers the area without distortion */
+  border: 3px solid #FF8C5A; /* Accent border color */
+  flex-shrink: 0; /* Prevent image from shrinking */
+}
+
+.greeting-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1; /* Allow text block to take available space */
+}
+
+.greeting-text h2 {
+  font-size: 1.6rem; /* Slightly smaller heading */
+  font-weight: 700; /* Bolder heading */
+  color: #E0E0E0; /* Lighter white */
+  margin: 0;
+  margin-bottom: 0.25rem; /* Small space below greeting */
+}
+
+.greeting-text p {
+  font-size: 0.9rem; /* Smaller paragraph text */
+  color: rgba(255, 255, 255, 0.6); /* Softer white */
+  margin: 0;
+  margin-bottom: 1rem; /* Space before buttons */
+}
+
+.interactive-buttons {
+  display: flex;
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+  gap: 0.6rem; /* Tighter spacing between buttons */
+  margin-top: 0.5rem; /* Space from description */
+}
+
+.interactive-btn {
+  background: rgba(255, 255, 255, 0.08); /* Slightly darker background for buttons */
+  color: #E0E0E0; /* Button text color */
+  padding: 0.6rem 1rem; /* Padding for button text */
+  border-radius: 0.4rem; /* Slightly less rounded corners */
+  display: flex;
+  align-items: center;
+  gap: 0.4rem; /* Space between icon and text */
+  font-weight: 500;
+  font-size: 0.9rem; /* Smaller font size for buttons */
+  transition: all 0.2s ease-in-out; /* Smoother transition */
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle button shadow */
+}
+
+.interactive-btn:hover {
+  background: rgba(255, 255, 255, 0.15); /* Lighter on hover */
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+/* Adjustments for the view navigation for better spacing */
+.view-nav {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Allow navigation to wrap */
+  gap: 1rem; /* Gap for wrapping items */
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 0.5rem; /* Tighter gap between nav buttons */
+}
+
+/* Ensure the create button is styled appropriately */
+.create-button {
+  background-color: #4CAF50; /* A pleasant green */
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out;
+  border: none;
+  cursor: pointer;
+}
+
+.create-button:hover {
+  background-color: #45a049;
+}
+
+/* === NEW WELCOME BANNER STYLES === */
+
+.welcome-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* 24px */
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem; /* 12px */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.welcome-pfp {
+  width: 80px;  /* <-- Smaller image */
+  height: 80px; /* <-- Smaller image */
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #FF8C5A;
+  flex-shrink: 0; /* Prevents image from shrinking */
+}
+
+.welcome-text {
+  flex-grow: 1;
+}
+
+.welcome-text h2 {
+  font-size: 1.75rem; /* 28px */
+  font-weight: 600;
+  color: white;
+  margin: 0 0 0.25rem 0; /* 4px bottom margin */
+}
+
+.welcome-text p {
+  font-size: 1rem; /* 16px */
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 1rem 0; /* 16px bottom margin */
+}
+
+.welcome-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem; /* 12px */
+}
+
+.welcome-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 0.5rem 1rem; /* 8px 16px */
+  border-radius: 0.5rem; /* 8px */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* 8px */
+  font-weight: 500;
+  font-size: 0.875rem; /* 14px */
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.welcome-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Add spacing above the nav buttons */
+.view-nav {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* General improvements to existing elements if needed for consistency */
+.dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, rgba(18, 87, 116, 1) 0%, rgba(26, 116, 153, 1) 100%);
+  color: white;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.2); /* Darker header for contrast */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.header-user .logout-button {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.header-user .logout-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: white;
+}}

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Book, Plus, Loader2, User, MessageSquare, X, CornerDownRight, ThumbsUp, Bot
+  Book, Plus, Loader2, User, MessageSquare, X, CornerDownRight, ThumbsUp, Bot,
+  Settings, HelpCircle // <-- IMPORTED NEW ICONS
 } from 'lucide-react';
 
 // Function to load replies for a specific post
@@ -557,6 +558,22 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <main className="dashboard-main">
+        
+        {/* === NEW WELCOME BLOCK === */}
+        <div className="welcome-banner">
+          <img 
+            src="/assets/pfp.png" // Path from /public folder
+            alt="Profile" 
+            className="welcome-pfp"
+          />
+          <div className="welcome-text">
+            <h2>Hi {user?.full_name || 'User'}👋 </h2>
+            <p>Welcome back. What would you like to do today?</p>
+          </div>
+        </div>
+        {/* === END NEW WELCOME BLOCK === */}
+
+
         {/* View Navigation */}
         <div className="view-nav">
           <div className="nav-buttons">
